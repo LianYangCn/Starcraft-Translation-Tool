@@ -4,6 +4,8 @@
 
 using QChkUI;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -117,7 +119,8 @@ namespace WpfApplication1 {
                 mem = new MemoryModule(data);
                 _Process = (ProcessFunc) mem.GetDelegateFromFuncName(0, typeof(ProcessFunc));
 #else
-                IntPtr pDll = LoadLibrary("C:\\Users\\Tom\\Desktop\\Documents\\Visual Studio 2015\\Projects\\TranslateLib\\Debug\\TranslateLib.dll");
+                var dllPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "../../Resources/TranslateLib.dll");
+                IntPtr pDll = LoadLibrary(dllPath);
                 IntPtr pAddressOfFunctionToCall0 = GetProcAddress(pDll, (IntPtr) 1);
                 _Process = (ProcessFunc) Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall0, typeof(ProcessFunc));
 #endif
@@ -309,7 +312,14 @@ namespace WpfApplication1 {
                 int totalStrings = rb.readInt();
                 MapString[] result = new MapString[totalStrings];
                 for (int i = 0; i < totalStrings; i++) {
-                    result[i] = readMapString(rb, encoding);
+                    try
+                    {
+                        result[i] = readMapString(rb, encoding);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Print("read Map String failed: ${0}", i);
+                    }
                 }
 
                 // Sort by index

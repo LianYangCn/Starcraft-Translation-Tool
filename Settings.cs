@@ -148,6 +148,7 @@ namespace WpfApplication1 {
             s.outputPath = "";
             s.langauges = new String[0];
             s.strings = new String[0][];
+            s.encodings = new string[0];
             s.useCondition = 0;
             s.lastKnownMapping = new int[0];
             s.originalStrings = new String[0];
